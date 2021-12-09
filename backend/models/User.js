@@ -22,6 +22,10 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 4,
   },
+  confirmed: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 userSchema.pre("save", async function () {
@@ -34,6 +38,22 @@ userSchema.methods.checkPassword = async function checkPassword(
 ) {
   const res = await bcrypt.compare(candidatePassword, this.password);
   return res;
+};
+
+userSchema.statics.login = async function login(email, password) {
+  const user = await this.findOne({ email });
+
+  if (user) {
+    if (!user.confirmed) {
+      throw Error("This account is not confirmed");
+    }
+    const isCorrectPassword = await bcrypt.compare(password, user.password);
+    if (isCorrectPassword) {
+      return user;
+    }
+    throw Error("Invalid password");
+  }
+  throw Error("This email doesn't exist");
 };
 
 module.exports = mongoose.model("user", userSchema);
