@@ -15,10 +15,6 @@ const signInController = async (req, res) => {
     const user = await User.create(req.body);
     const name = user.firstName.toLowerCase();
 
-    const token = jwt.sign({ userId: user._id }, process.env.SECRET, {
-      expiresIn: MAX_AGE,
-    });
-
     const info = await transporter.sendMail({
       from: '"Salim" <salim@example.com>',
       to: `${name}@example.com`,
@@ -28,10 +24,7 @@ const signInController = async (req, res) => {
 
     console.log(info.response);
 
-    res
-      .status(201)
-      .cookie("access_token", token, { maxAge: MAX_AGE, httpOnly: true })
-      .json({ message: "User created" });
+    res.status(201).json({ message: "User created" });
   } catch (error) {
     res.status(400).json({ error });
   }
@@ -65,8 +58,19 @@ const confirmationController = async (req, res) => {
   const { id } = req.params;
 
   try {
-    await User.findByIdAndUpdate(id, { confirmed: true }, { new: true });
-    res.redirect("http://localhost:3000/");
+    const user = await User.findByIdAndUpdate(
+      id,
+      { confirmed: true },
+      { new: true }
+    );
+
+    const token = jwt.sign({ userId: user._id }, process.env.SECRET, {
+      expiresIn: MAX_AGE,
+    });
+
+    res
+      .cookie("access_token", token, { maxAge: MAX_AGE, httpOnly: true })
+      .redirect("http://localhost:3000/");
   } catch (error) {
     console.log(error);
   }
@@ -76,76 +80,63 @@ const forgotPasswordController = async (req, res) => {
   const { email } = req.body;
 
   try {
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ email });
     const name = user.firstName.toLowerCase();
     const id = user._id;
 
-    const secret = process.env.SECRET + user.passsword;
+    const secret = process.env.SECRET + user.password;
 
-    const token = jwt.sign({ userName= user.firstName }, secret, { expiresIn: "5m" });
+    const token = jwt.sign({ userName: user.firstName }, secret, {
+      expiresIn: "5m",
+    });
 
-    const info = await transporter.sendMail({
-    from: '"Salim" <salim@example.com>',
-    to: `${ name }@example.com`,
-    subject: "Email Confirmation",
-    html: `<h3><a href="http://localhost:8080/api/accounts/reset/${ token }/${ id }">Click here</a> to reset your password</h3>`,
-  });
+    await transporter.sendMail({
+      from: '"Salim" <salim@example.com>',
+      to: `${name}@example.com`,
+      subject: "Email Confirmation",
+      html: `<h3><a href="http://localhost:8080/api/accounts/reset/${id}">Click here</a> to reset your password</h3>`,
+    });
 
-    console.log( info.response );
-
-    res.status(200).json({ message: "Check you email to reset your password" })
-
+    res
+      .status(200)
+      .cookie("access_token", token, { maxAge: 300000, httpOnly: true })
+      .json({ message: "Check you email to reset your password" });
   } catch (error) {
-    res.status(400).json({error: error.messsage})
+    res.status(400).json({ error: error.messsage });
   }
 };
-
-const verifyTokenForReset = async (req, res) => {
-  const { token, id } = req.params;
-
-  try {
-    const user = await User.findById(id)
-
-    const secret = process.env.SECRET + user.password;
-    
-    const decoded = jwt.verify(token, secret);
-
-    if (!decoded) {
-      return res.status(401).json({error: "This link is no longer valid"})
-    }
-    res.redirect("http://localhost:3000/reset");
-  } catch (error) {
-    res.status(500).json({error: "Something went wrong...Try later"})
-  }
-}
 
 const resetPasswordController = async (req, res) => {
   const { id } = req.params;
   const { password, passwordConfirm } = req.body;
 
   if (password !== passwordConfirm) {
-    return res.status(400).json({ error: "Please confirm the same password" })
+    return res.status(400).json({ error: "Please confirm the same password" });
   }
 
   try {
     const user = await User.findById(id);
 
     user.password = passwordConfirm;
-    user.save();
+    await user.save();
 
-    const token = jwt.sign({userName: user.name}, process.env.SECRET, {expiresIn: MAX_AGE})
+    const token = jwt.sign({ userName: user.name }, process.env.SECRET, {
+      expiresIn: MAX_AGE,
+    });
 
-    res.status(200).cookie("access_token", token, {maxAge: MAX_AGE, httpOnly: true})/json({message: "Your password has been successfully rest"})
+    res
+      .status(200)
+      .cookie("access_token", token, { maxAge: MAX_AGE, httpOnly: true })
+      .json({ message: "Your password has been successfully rest" });
   } catch (error) {
-    res.status(400).json({error: error.messsage})
+    res.status(400).json({ error: error.message });
   }
-}
-
+};
 
 module.exports = {
   signInController,
   logInController,
   confirmationController,
   forgotPasswordController,
-  resetPasswordController
+  resetPasswordController,
 };
