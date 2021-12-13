@@ -7,6 +7,7 @@ const connectDB = require("./config/connectDB");
 const productsRoutes = require("./routes/productsRoutes");
 const accountsRoutes = require("./routes/accountsRoutes");
 const cartsRoutes = require("./routes/cartsRoutes");
+const authMiddleware = require("./middleware/authMiddleware");
 
 const app = express();
 
@@ -23,7 +24,7 @@ app.use("/api/accounts", accountsRoutes);
 app.use("/api/products", productsRoutes);
 
 // Carts Routes
-app.use("/api/carts", cartsRoutes);
+app.use("/api/carts", authMiddleware, cartsRoutes);
 
 const PORT = process.env.PORT || 5000;
 

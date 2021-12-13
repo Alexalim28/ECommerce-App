@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Cart = require("../models/Cart");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 
@@ -54,6 +55,13 @@ const logInController = async (req, res) => {
     .json({ message: "Successfully logged in" });
 };
 
+const logOutController = async (req, res) => {
+  res
+    .status(200)
+    .clearCookie("access_token")
+    .json({ message: "Cookie cleared succesfully" });
+};
+
 const confirmationController = async (req, res) => {
   const { id } = req.params;
 
@@ -63,6 +71,19 @@ const confirmationController = async (req, res) => {
       { confirmed: true },
       { new: true }
     );
+
+    await Cart.create({
+      createdBy: user._id,
+      products: [
+        {
+          name: "",
+          imgUrl: "",
+          description: "",
+          price: 0,
+          qtyInStock: 0,
+        },
+      ],
+    });
 
     const token = jwt.sign({ userId: user._id }, process.env.SECRET, {
       expiresIn: MAX_AGE,
@@ -120,7 +141,7 @@ const resetPasswordController = async (req, res) => {
     user.password = passwordConfirm;
     await user.save();
 
-    const token = jwt.sign({ userName: user.name }, process.env.SECRET, {
+    const token = jwt.sign({ userId: user._id }, process.env.SECRET, {
       expiresIn: MAX_AGE,
     });
 
@@ -136,6 +157,7 @@ const resetPasswordController = async (req, res) => {
 module.exports = {
   signInController,
   logInController,
+  logOutController,
   confirmationController,
   forgotPasswordController,
   resetPasswordController,
