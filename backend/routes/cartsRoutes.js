@@ -11,6 +11,6 @@ router.route("/getCart").get(getCartController);
 
 router.route("/addProduct").patch(addProductController);
 
-router.route("/deleteProduct/:id").delete(deleteProductController);
+router.route("/deleteProduct/:id").patch(deleteProductController);
 
 module.exports = router;

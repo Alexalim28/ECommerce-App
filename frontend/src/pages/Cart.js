@@ -1,37 +1,25 @@
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const Cart = () => {
-  const [name, setName] = useState("Playstation");
-  const [imgUrl, setImgUrl] = useState("http://www.images.com/playstation.png");
-  const [description, setDescription] = useState("A cool playstation 5");
-  const [price, setPrice] = useState(599);
-  const [qtyInStock, setQtyInStock] = useState(10);
-
-  const addProduct = async (e) => {
-    e.preventDefault();
-    try {
-      const { data } = await axios.patch(
-        "http://localhost:8080/api/carts/addProduct",
-        {
-          name,
-          imgUrl,
-          description,
-          price,
-          qtyInStock,
-        },
-        { withCredentials: true }
-      );
-      console.log(data);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
+  useEffect(() => {
+    const getCart = async () => {
+      try {
+        const { data } = await axios.get(
+          "http://localhost:8080/api/carts/getCart",
+          { withCredentials: true }
+        );
+        console.log(data.cart.products);
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    getCart();
+  }, []);
 
   return (
     <div>
-      <button onClick={addProduct}>Add product</button>
+      <h2>This is the cart page</h2>
     </div>
   );
 };
