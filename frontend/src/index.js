@@ -4,6 +4,7 @@ import App from "./App";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Reset from "./pages/Reset";
 import Forgot from "./pages/Forgot";
+import Cart from "./pages/Cart";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -12,6 +13,7 @@ ReactDOM.render(
         <Route path="/" exact element={<App />} />
         <Route path="/forgot" element={<Forgot />} />
         <Route path="/reset/:id" element={<Reset />} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,

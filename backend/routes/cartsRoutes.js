@@ -3,13 +3,13 @@ const router = express.Router();
 
 const {
   getCartController,
-  updateCartController,
+  addProductController,
   deleteProductController,
 } = require("../controllers/cartsController");
 
 router.route("/getCart").get(getCartController);
 
-router.route("/updateCart").patch(updateCartController);
+router.route("/addProduct").patch(addProductController);
 
 router.route("/deleteProduct/:id").delete(deleteProductController);
 

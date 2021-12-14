@@ -74,15 +74,7 @@ const confirmationController = async (req, res) => {
 
     await Cart.create({
       createdBy: user._id,
-      products: [
-        {
-          name: "",
-          imgUrl: "",
-          description: "",
-          price: 0,
-          qtyInStock: 0,
-        },
-      ],
+      products: [],
     });
 
     const token = jwt.sign({ userId: user._id }, process.env.SECRET, {
