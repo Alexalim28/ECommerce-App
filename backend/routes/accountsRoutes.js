@@ -25,7 +25,9 @@ router
   .route("/reset/:id")
   .get(checkToken, async (req, res) => {
     const { id } = req.params;
-    res.redirect(`http://localhost:3000/reset/${id}`);
+    res
+      .json({ message: "Redirected" })
+      .redirect(`http://localhost:3000/reset/${id}`);
   })
   .post(resetPasswordController);
 

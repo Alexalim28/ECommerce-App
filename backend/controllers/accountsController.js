@@ -2,6 +2,8 @@ const User = require("../models/User");
 const Cart = require("../models/Cart");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
+const { StatusCodes } = require("http-status-codes");
+const { UnauthorizedError, BadRequestError } = require("../errors");
 
 let transporter = nodemailer.createTransport({
   host: "0.0.0.0",
@@ -12,111 +14,99 @@ let transporter = nodemailer.createTransport({
 const MAX_AGE = 24 * 60 * 60 * 1000;
 
 const signInController = async (req, res) => {
-  try {
-    const user = await User.create(req.body);
-    const name = user.firstName.toLowerCase();
+  const user = await User.create(req.body);
+  const name = user.firstName.toLowerCase();
 
-    const info = await transporter.sendMail({
-      from: '"Salim" <salim@example.com>',
-      to: `${name}@example.com`,
-      subject: "Email Confirmation",
-      html: `<h3><a href="http://localhost:8080/api/accounts/confirmation/${user._id}">Click here</a> to confirm your email</h3>`,
-    });
+  const info = await transporter.sendMail({
+    from: '"Salim" <salim@example.com>',
+    to: `${name}@example.com`,
+    subject: "Email Confirmation",
+    html: `<h3><a href="http://localhost:8080/api/accounts/confirmation/${user._id}">Click here</a> to confirm your email</h3>`,
+  });
 
-    console.log(info.response);
+  console.log(info.response);
 
-    res.status(201).json({ message: "User created" });
-  } catch (error) {
-    res.status(400).json({ error });
-  }
+  res
+    .status(StatusCodes.CREATED)
+    .json({ message: "User succesfully created!" });
 };
 
-const logInController = async (req, res) => {
-  const { email, password } = req.body;
+const confirmationController = async (req, res) => {
+  const { id } = req.params;
 
-  if (!email || !password) {
-    return res.status(401).json({ error: "One field is missing" });
-  }
+  const user = await User.findByIdAndUpdate(
+    id,
+    { confirmed: true },
+    { new: true }
+  );
 
-  let user;
-  try {
-    user = await User.login(email, password);
-  } catch (error) {
-    return res.status(401).json({ error: error.message });
-  }
+  await Cart.create({
+    createdBy: user._id,
+    products: [],
+  });
 
   const token = jwt.sign({ userId: user._id }, process.env.SECRET, {
     expiresIn: MAX_AGE,
   });
 
   res
-    .status(200)
     .cookie("access_token", token, { maxAge: MAX_AGE, httpOnly: true })
-    .json({ message: "Successfully logged in" });
+    .redirect("http://localhost:3000/");
+};
+
+const logInController = async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password)
+    throw new BadRequestError("You must provide an email and a password");
+
+  const user = await User.login(email, password);
+
+  const token = jwt.sign({ userId: user._id }, process.env.SECRET, {
+    expiresIn: MAX_AGE,
+  });
+
+  res
+    .status(StatusCodes.OK)
+    .cookie("access_token", token, { maxAge: MAX_AGE, httpOnly: true })
+    .json({ message: "Successfully logged in!" });
 };
 
 const logOutController = async (req, res) => {
   res
-    .status(200)
+    .status(StatusCodes.OK)
     .clearCookie("access_token")
-    .json({ message: "Cookie cleared succesfully" });
-};
-
-const confirmationController = async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    const user = await User.findByIdAndUpdate(
-      id,
-      { confirmed: true },
-      { new: true }
-    );
-
-    await Cart.create({
-      createdBy: user._id,
-      products: [],
-    });
-
-    const token = jwt.sign({ userId: user._id }, process.env.SECRET, {
-      expiresIn: MAX_AGE,
-    });
-
-    res
-      .cookie("access_token", token, { maxAge: MAX_AGE, httpOnly: true })
-      .redirect("http://localhost:3000/");
-  } catch (error) {
-    console.log(error);
-  }
+    .json({ message: "Cookies cleared succesfully!" });
 };
 
 const forgotPasswordController = async (req, res) => {
   const { email } = req.body;
 
-  try {
-    const user = await User.findOne({ email });
-    const name = user.firstName.toLowerCase();
-    const id = user._id;
+  if (!email)
+    throw new BadRequestError("You must provide an email and a password");
 
-    const secret = process.env.SECRET + user.password;
+  const user = await User.findOne({ email });
 
-    const token = jwt.sign({ userName: user.firstName }, secret, {
-      expiresIn: "5m",
-    });
+  if (!user) throw new UnauthorizedError("Invalid credentials");
 
-    await transporter.sendMail({
-      from: '"Salim" <salim@example.com>',
-      to: `${name}@example.com`,
-      subject: "Email Confirmation",
-      html: `<h3><a href="http://localhost:8080/api/accounts/reset/${id}">Click here</a> to reset your password</h3>`,
-    });
+  const name = user.firstName.toLowerCase();
 
-    res
-      .status(200)
-      .cookie("access_token", token, { maxAge: 300000, httpOnly: true })
-      .json({ message: "Check you email to reset your password" });
-  } catch (error) {
-    res.status(400).json({ error: error.messsage });
-  }
+  const secret = process.env.SECRET + user.password;
+  const token = jwt.sign({ userName: user.firstName }, secret, {
+    expiresIn: "5m",
+  });
+
+  await transporter.sendMail({
+    from: '"Salim" <salim@example.com>',
+    to: `${name}@example.com`,
+    subject: "Reset Password",
+    html: `<h3><a href="http://localhost:8080/api/accounts/reset/${user._id}">Click here</a> to reset your password</h3>`,
+  });
+
+  res
+    .status(StatusCodes.OK)
+    .cookie("access_token", token, { maxAge: 300000, httpOnly: true })
+    .json({ message: "Check you email to reset your password!" });
 };
 
 const resetPasswordController = async (req, res) => {
@@ -124,26 +114,22 @@ const resetPasswordController = async (req, res) => {
   const { password, passwordConfirm } = req.body;
 
   if (password !== passwordConfirm) {
-    return res.status(400).json({ error: "Please confirm the same password" });
+    throw new BadRequestError("Please confirm your password!");
   }
 
-  try {
-    const user = await User.findById(id);
+  const user = await User.findById(id);
 
-    user.password = passwordConfirm;
-    await user.save();
+  user.password = passwordConfirm;
+  await user.save();
 
-    const token = jwt.sign({ userId: user._id }, process.env.SECRET, {
-      expiresIn: MAX_AGE,
-    });
+  const token = jwt.sign({ userId: user._id }, process.env.SECRET, {
+    expiresIn: MAX_AGE,
+  });
 
-    res
-      .status(200)
-      .cookie("access_token", token, { maxAge: MAX_AGE, httpOnly: true })
-      .json({ message: "Your password has been successfully rest" });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+  res
+    .status(StatusCodes.OK)
+    .cookie("access_token", token, { maxAge: MAX_AGE, httpOnly: true })
+    .json({ message: "Your password has been successfully reset" });
 };
 
 module.exports = {
