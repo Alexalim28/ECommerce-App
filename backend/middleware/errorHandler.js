@@ -19,6 +19,11 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     error.statusCode = StatusCodes.UNAUTHORIZED;
   }
 
+  if (err.name === "CastError") {
+    error.message = `No Product matches the id: ${err.value}`;
+    error.statusCode = StatusCodes.BAD_REQUEST;
+  }
+
   return res.status(error.statusCode).json({ errors: error.message });
 };
 
