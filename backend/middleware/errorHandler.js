@@ -23,6 +23,11 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     error.message = `No Product matches the id: ${err.value}`;
     error.statusCode = StatusCodes.BAD_REQUEST;
   }
+  if (err.name === "JsonWebTokenError") {
+    error.message =
+      "You must be logged in or create an account to have access to your cart";
+    error.statusCode = StatusCodes.BAD_REQUEST;
+  }
 
   return res.status(error.statusCode).json({ errors: error.message });
 };

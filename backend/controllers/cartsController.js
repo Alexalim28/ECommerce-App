@@ -1,39 +1,27 @@
 const Cart = require("../models/Cart");
 
 const getCartController = async (req, res) => {
-  try {
-    const cart = await Cart.findOne({ createdBy: req.userId });
-    res.status(200).json({ cart });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+  const cart = await Cart.findOne({ createdBy: req.userId });
+  res.status(200).json({ cart });
 };
 
 const addProductController = async (req, res) => {
-  try {
-    const cart = await Cart.findOne({ createdBy: req.userId });
-    cart.products.push(req.body);
-    await cart.save();
-    res.status(200).json({ message: "Product added in the cart" });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+  const cart = await Cart.findOne({ createdBy: req.userId });
+  cart.products.push(req.body);
+  await cart.save();
+  res.status(200).json({ message: "Product added in the cart" });
 };
 
 const deleteProductController = async (req, res) => {
   const { id } = req.params;
   const { userId } = req;
 
-  try {
-    const cart = await Cart.findOneAndUpdate(
-      { createdBy: userId },
-      { $pull: { products: { _id: id } } },
-      { new: true }
-    );
-    res.status(200).json({ cart });
-  } catch (error) {
-    res.status(400).json({ error: "Something went wrong" });
-  }
+  const cart = await Cart.findOneAndUpdate(
+    { createdBy: userId },
+    { $pull: { products: { _id: id } } },
+    { new: true }
+  );
+  res.status(200).json({ cart });
 };
 
 module.exports = {
