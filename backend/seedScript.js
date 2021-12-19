@@ -1,5 +1,5 @@
 const connectDB = require("./config/connectDB");
-const Product = require("./models/Product");
+const { Product } = require("./models/Product");
 const products = require("./data/products");
 
 connectDB();

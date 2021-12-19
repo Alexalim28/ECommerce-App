@@ -6,10 +6,10 @@ const products = [
     description:
       "This is my workplace (when it’s tidy 😇). Free of distractions so that I can focus on my work and creativity. With some nice tea or coffee. And a computer that just works, has a gorgeous display and no distracting cables.",
     price: 1500,
-    qtyInStock: 10,
+    qtyInStock: 0,
   },
   {
-    name: "space gray iphone 6 on white textile",
+    name: "Space gray iphone 6 on white textile",
     imgUrl:
       "https://images.unsplash.com/photo-1580910051074-3eb694886505?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODEyOTJ8MHwxfGFsbHx8fHx8fHx8fDE2Mzg4NzIwMDg&ixlib=rb-1.2.1&q=80&w=1080",
     description:
@@ -27,10 +27,10 @@ const products = [
     qtyInStock: 15,
   },
   {
-    name: "oculus quest 2 on white desk with lamp",
+    name: "Oculus quest 2 on white desk with lamp",
     imgUrl:
-      "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODEyOTJ8MHwxfGFsbHx8fHx8fHx8fDE2Mzg4NzIxOTE&ixlib=rb-1.2.1&q=80&w=1080",
-    description: "white and black beats by dr dre headphones",
+      "https://images.unsplash.com/photo-1622979136013-fcbffb84789c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODEyOTJ8MHwxfGFsbHx8fHx8fHx8fDE2Mzk5MjUyNDg&ixlib=rb-1.2.1&q=80&w=1080",
+    description: "Close up of an Oculus Quest 2 VR headset",
     price: 299,
     qtyInStock: 15,
   },

@@ -1,0 +1,16 @@
+.home-container {
+  width: 80%;
+  padding-top: 100px;
+  margin: auto;
+}
+
+.grid {
+  display: grid;
+  margin: auto;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(5fr);
+  justify-items: center;
+  padding: 20px;
+  column-gap: 30px;
+  row-gap: 25px;
+}
