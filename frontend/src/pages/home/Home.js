@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Signin from "../../pages/signin";
 
 // Third Party Library
 import axios from "axios";
@@ -8,7 +9,12 @@ import Item from "../../components/item";
 
 import "./home.css";
 
-const Home = () => {
+const Home = ({
+  showSigninModal,
+  setShowSigninModal,
+  showLoginModal,
+  setShowLoginModal,
+}) => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -24,6 +30,7 @@ const Home = () => {
 
   return (
     <div className="home-container">
+      {showSigninModal && <Signin setShowSigninModal={setShowSigninModal} />}
       <section className="grid">
         {products.map((product) => {
           const {

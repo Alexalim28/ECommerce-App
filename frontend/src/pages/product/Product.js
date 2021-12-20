@@ -58,11 +58,17 @@ const Product = () => {
         <p className="description">{description}</p>
       </div>
       <div className="card">
-        <div className="quantity">Quantity: {qtyInStock}</div>
-        <div className="price">Price: {price}</div>
-        <div className="add-btn" onClick={addProduct}>
-          ADD BUTTON
+        <div className="quantity">
+          <span className="subtitle">Quantity:</span>
+          <span>{qtyInStock}</span>
         </div>
+        <div className="price">
+          <span className="subtitle">Price:</span>
+          <span>{price} $</span>
+        </div>
+        <button className="add-btn" onClick={addProduct}>
+          add to my cart
+        </button>
       </div>
     </div>
   );

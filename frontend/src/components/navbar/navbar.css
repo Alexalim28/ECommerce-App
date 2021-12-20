@@ -45,8 +45,8 @@
   transform: scale(1.1, 1.1);
 }
 
-.signin a,
-.login a {
+.signin p,
+.login p {
   color: #fff;
 }
 
