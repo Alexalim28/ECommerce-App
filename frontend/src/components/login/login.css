@@ -1,0 +1,106 @@
+.overlay-signin,
+.overlay-login {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 10;
+}
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30%;
+  min-height: 200px;
+  padding: 30px;
+  margin: auto;
+  background: #fff;
+  border: 2px solid rgba(0, 0, 0, 0.8);
+  border-radius: 10px;
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4);
+}
+
+.modal-title {
+  align-self: center;
+  padding-bottom: 15px;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.modal div {
+  display: flex;
+  align-items: center;
+  padding: 5px 0;
+}
+
+.modal label {
+  flex-grow: 1;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.modal input {
+  width: 290px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid rgba(104, 201, 200, 1);
+  font-size: 1rem;
+}
+
+.modal input:focus {
+  outline: none;
+  box-shadow: 0px 0px 1px 2px rgba(168, 76, 156, 1);
+}
+
+.modal p {
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.modal span {
+  align-self: center;
+  color: rgba(0, 0, 255, 0.74);
+}
+
+.close-modal {
+  position: absolute;
+  top: 15px;
+  left: 90%;
+  width: 30px;
+  height: 30px;
+  background-color: rgba(255, 0, 0, 0.801);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.close-modal span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: 700;
+  color: #fff;
+}
+
+.close-modal:hover {
+  transform: rotate(360deg);
+  transform-origin: center;
+}
+
+.submit-btn input {
+  width: 100%;
+  background: rgba(104, 201, 200, 1);
+  border: 1px solid rgb(25, 173, 171);
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 600;
+  cursor: pointer;
+}

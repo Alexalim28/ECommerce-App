@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import Signin from "../../pages/signin";
+import Signin from "../../components/signin";
+import Login from "../../components/login";
 
 // Third Party Library
 import axios from "axios";
@@ -31,6 +32,7 @@ const Home = ({
   return (
     <div className="home-container">
       {showSigninModal && <Signin setShowSigninModal={setShowSigninModal} />}
+      {showLoginModal && <Login setShowLoginModal={setShowLoginModal} />}
       <section className="grid">
         {products.map((product) => {
           const {
