@@ -29,7 +29,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     error.statusCode = StatusCodes.BAD_REQUEST;
   }
 
-  return res.status(error.statusCode).json({ errors: error.message });
+  res.status(error.statusCode).json({ errors: error.message });
 };
 
 module.exports = errorHandlerMiddleware;

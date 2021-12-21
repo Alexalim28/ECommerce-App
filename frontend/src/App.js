@@ -1,24 +1,41 @@
 import "./App.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
-import Home from "./pages/home/Home";
-import Product from "./pages/product/Product";
-import Cart from "./pages/cart/Cart";
-import Signin from "./components/signin";
-import Forgot from "./pages/forgot/Forgot";
-import Reset from "./pages/reset/Reset";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Home from "./pages/home";
+import Product from "./pages/product";
+import Cart from "./pages/cart";
+import Forgot from "./pages/forgot";
+import Reset from "./pages/reset";
 import Navbar from "./components/navbar";
 import Footer from "./components/footer";
 
 function App() {
   const [showSigninModal, setShowSigninModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const getLoginCookie = () => {
+      const loginCookie = document.cookie
+        .split("; ")
+        .find((cookie) => cookie.startsWith("name="));
+      if (loginCookie) {
+        setIsLoggedIn(true);
+      }
+    };
+    getLoginCookie();
+  }, []);
 
   return (
     <div className="App">
+      <ToastContainer />
       <Navbar
         setShowSigninModal={setShowSigninModal}
         setShowLoginModal={setShowLoginModal}
+        isLoggedIn={isLoggedIn}
+        setIsLoggedIn={setIsLoggedIn}
       />
       <Routes>
         <Route
@@ -30,6 +47,7 @@ function App() {
               setShowSigninModal={setShowSigninModal}
               showLoginModal={showLoginModal}
               setShowLoginModal={setShowLoginModal}
+              setIsLoggedIn={setIsLoggedIn}
             />
           }
         />

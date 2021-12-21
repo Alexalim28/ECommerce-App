@@ -1,41 +1,75 @@
 import "./signin.css";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
 
-const Signin = ({ setShowSigninModal }) => {
+const Signin = ({ setShowSigninModal, setIsCreated, setIsLoggedIn }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [firstNameError, setFirstNameError] = useState("");
+  const [lastNameError, setLastNameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
 
   const signInHandler = async (e) => {
     e.preventDefault();
 
-    const { data } = await axios.post(
-      "http://localhost:8080/api/accounts/signin",
-      {
+    setFirstNameError("");
+    setLastNameError("");
+    setEmailError("");
+    setPasswordError("");
+
+    const response = await fetch("http://localhost:8080/api/accounts/signin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
         firstName,
         lastName,
         email,
         password,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (data.message) {
+      setIsCreated(true);
+    }
+
+    if (data.errors instanceof Object) {
+      if (data.errors.firstName) {
+        setFirstNameError(data.errors.firstName);
       }
-    );
-    console.log(data.message);
+      if (data.errors.lastName) {
+        setLastNameError(data.errors.lastName);
+      }
+      if (data.errors.email) {
+        setEmailError(data.errors.email);
+      }
+      if (data.errors.password) {
+        setPasswordError(data.errors.password);
+      }
+    } else if (data.errors && data.errors.includes("email")) {
+      setEmailError(data.errors);
+    } else {
+      setErrorMsg(data.errors);
+    }
   };
 
   return (
     <>
-      <div className="overlay-signin">
-        <form className="modal" id="form">
+      <div className="overlay">
+        <form className="modal" onSubmit={signInHandler}>
           <h3 className="modal-title">Sign in</h3>
-          <p onClick={() => setShowSigninModal(false)}>
+          <div onClick={() => setShowSigninModal(false)}>
             <div className="close-modal">
               <span>X</span>
             </div>
-          </p>
+          </div>
+          {errorMsg && <p className="error">{errorMsg}</p>}
           <div>
-            <label for="name">First name</label>
+            <label forhtml="name">First name</label>
             <input
               type="text"
               placeholder="First name"
@@ -43,8 +77,9 @@ const Signin = ({ setShowSigninModal }) => {
               onChange={(e) => setFirstName(e.target.value)}
             />
           </div>
+          {firstNameError && <p className="error">{firstNameError}</p>}
           <div>
-            <label for="name">Last name</label>
+            <label forhtml="name">Last name</label>
             <input
               type="text"
               placeholder="Last name"
@@ -52,9 +87,9 @@ const Signin = ({ setShowSigninModal }) => {
               onChange={(e) => setLastName(e.target.value)}
             />
           </div>
-          <div className="error name-err"></div>
+          {lastNameError && <p className="error">{lastNameError}</p>}
           <div>
-            <label for="email">Email</label>
+            <label forhtml="email">Email</label>
             <input
               type="text"
               placeholder="Email"
@@ -62,9 +97,9 @@ const Signin = ({ setShowSigninModal }) => {
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          <div className="error email-err"></div>
+          {emailError && <p className="error">{emailError}</p>}
           <div>
-            <label for="password">Password</label>
+            <label forhtml="password">Password</label>
             <input
               type="password"
               placeholder="Password"
@@ -72,13 +107,8 @@ const Signin = ({ setShowSigninModal }) => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <div className="error password-err"></div>
-          <div>
-            <Link to="/login">
-              Already got an account?<span> Log in here...</span>
-            </Link>
-          </div>
-          <div className="submit-btn" onSubmit={signInHandler}>
+          {passwordError && <p className="error">{passwordError}</p>}
+          <div className="submit-btn">
             <input type="submit" value="Sign in" />
           </div>
         </form>

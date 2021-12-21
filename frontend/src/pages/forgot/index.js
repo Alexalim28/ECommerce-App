@@ -1,3 +1,4 @@
+import "./forgot.css";
 import React from "react";
 import { useState } from "react";
 import axios from "axios";
@@ -21,19 +22,18 @@ const Forgot = () => {
     }
   };
   return (
-    <div>
-      <h4>Forgot Password</h4>
-      <form onSubmit={sendEmail}>
-        <div>
-          <label htmlFor="email">Email</label>
+    <div className="container">
+      <h2>Enter your email to reset your password</h2>
+      <form className="form" onSubmit={sendEmail}>
+        <div className="input">
+          <label htmlfor="email">Email</label>
           <input
             type="text"
-            name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
-        <input type="submit" value="Send" />
+        <input className="btn" type="submit" value="Send" />
       </form>
     </div>
   );

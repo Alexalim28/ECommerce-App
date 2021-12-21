@@ -28,7 +28,7 @@ const signInController = async (req, res) => {
 
   res
     .status(StatusCodes.CREATED)
-    .json({ message: "User succesfully created!" });
+    .json({ message: "Please check your emails for confirmation" });
 };
 
 const confirmationController = async (req, res) => {
@@ -50,7 +50,8 @@ const confirmationController = async (req, res) => {
   });
 
   res
-    .cookie("access_token", token, { maxAge: MAX_AGE, httpOnly: true })
+    .cookie("access_token", token, { httpOnly: true })
+    .cookie("name", user.firstName)
     .redirect("http://localhost:3000/");
 };
 
@@ -68,7 +69,8 @@ const logInController = async (req, res) => {
 
   res
     .status(StatusCodes.OK)
-    .cookie("access_token", token, { maxAge: MAX_AGE, httpOnly: true })
+    .cookie("access_token", token, { httpOnly: true })
+    .cookie("name", user.firstName)
     .json({ message: "Successfully logged in!" });
 };
 
@@ -76,6 +78,8 @@ const logOutController = async (req, res) => {
   res
     .status(StatusCodes.OK)
     .clearCookie("access_token")
+    .clearCookie("name")
+    .clearCookie("logged")
     .json({ message: "Cookies cleared succesfully!" });
 };
 

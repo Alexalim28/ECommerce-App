@@ -1,37 +1,52 @@
 import "./login.css";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 
-const Login = ({ setShowLoginModal }) => {
+const Login = ({ setShowLoginModal, setIsLogged, setIsLoggedIn }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
 
   const logInHandler = async (e) => {
     e.preventDefault();
 
-    const { data } = await axios.post(
-      "http://localhost:8080/api/accounts/login",
-      {
+    setErrorMsg("");
+
+    const response = await fetch("http://localhost:8080/api/accounts/login", {
+      credentials: "include",
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
         email,
         password,
-      }
-    );
-    console.log(data.message);
+      }),
+    });
+
+    const data = await response.json();
+
+    if (data.message) {
+      setIsLogged(true);
+      setIsLoggedIn(true);
+      setShowLoginModal(false);
+    }
+
+    if (data.errors) {
+      setErrorMsg(data.errors);
+    }
   };
 
   return (
     <>
-      <div className="overlay-signin">
-        <form className="modal" id="form">
+      <div className="overlay">
+        <form className="modal" onSubmit={logInHandler}>
           <h3 className="modal-title">Log in</h3>
-          <p onClick={() => setShowLoginModal(false)}>
+          <div onClick={() => setShowLoginModal(false)}>
             <div className="close-modal">
               <span>X</span>
             </div>
-          </p>
+          </div>
           <div>
-            <label for="email">Email</label>
+            <label forhtml="email">Email</label>
             <input
               type="text"
               placeholder="Email"
@@ -40,7 +55,7 @@ const Login = ({ setShowLoginModal }) => {
             />
           </div>
           <div>
-            <label for="password">Password</label>
+            <label forhtml="password">Password</label>
             <input
               type="password"
               placeholder="Password"
@@ -48,13 +63,14 @@ const Login = ({ setShowLoginModal }) => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+          {errorMsg && <p className="error">{errorMsg}</p>}
           <div>
             <Link to="/forgot">
               Forgot your password?
               <span> Click here to reset your password</span>
             </Link>
           </div>
-          <div className="submit-btn" onSubmit={logInHandler}>
+          <div className="submit-btn">
             <input type="submit" value="Log in" />
           </div>
         </form>

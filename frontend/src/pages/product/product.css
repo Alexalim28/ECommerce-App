@@ -1,11 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto+Condensed&display=swap");
 
-.container {
+.product-container {
   display: flex;
   width: 95%;
   min-height: calc(100vh - 100px);
-  padding-top: 100px;
   margin: auto;
+  padding-top: 100px;
   font-family: "Roboto Condensed", sans-serif;
   color: rgba(0, 0, 0, 0.8);
 }
@@ -77,4 +77,5 @@ span {
   font-weight: 700;
   margin-top: 10px;
   cursor: pointer;
+  outline-style: none;
 }

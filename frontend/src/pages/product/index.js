@@ -4,11 +4,11 @@ import axios from "axios";
 import "./product.css";
 
 const Product = () => {
-  const [name, setName] = useState("Playstation");
+  const [name, setName] = useState("");
   const [imgUrl, setImgUrl] = useState("");
-  const [description, setDescription] = useState("A cool playstation 5");
-  const [price, setPrice] = useState(599);
-  const [qtyInStock, setQtyInStock] = useState(10);
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState(0);
+  const [qtyInStock, setQtyInStock] = useState(0);
 
   const { id } = useParams();
 
@@ -51,7 +51,7 @@ const Product = () => {
   };
 
   return (
-    <div className="container">
+    <div className="product-container">
       <img className="img" src={imgUrl} alt="product" />
       <div className="detail">
         <p className="name">{name}</p>
