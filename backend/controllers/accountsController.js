@@ -79,7 +79,6 @@ const logOutController = async (req, res) => {
     .status(StatusCodes.OK)
     .clearCookie("access_token")
     .clearCookie("name")
-    .clearCookie("logged")
     .json({ message: "Cookies cleared succesfully!" });
 };
 
@@ -133,6 +132,7 @@ const resetPasswordController = async (req, res) => {
   res
     .status(StatusCodes.OK)
     .cookie("access_token", token, { maxAge: MAX_AGE, httpOnly: true })
+    .cookie("name", user.firstName)
     .json({ message: "Your password has been successfully reset" });
 };
 

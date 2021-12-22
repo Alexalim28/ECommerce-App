@@ -1,7 +1,8 @@
 import "./signin.css";
 import React, { useState } from "react";
+import axios from "axios";
 
-const Signin = ({ setShowSigninModal, setIsCreated, setIsLoggedIn }) => {
+const Signin = ({ setShowSigninModal, setIsCreated }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -20,40 +21,35 @@ const Signin = ({ setShowSigninModal, setIsCreated, setIsLoggedIn }) => {
     setEmailError("");
     setPasswordError("");
 
-    const response = await fetch("http://localhost:8080/api/accounts/signin", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
+    try {
+      await axios.post("http://localhost:8080/api/accounts/signin", {
         firstName,
         lastName,
         email,
         password,
-      }),
-    });
-
-    const data = await response.json();
-
-    if (data.message) {
+      });
       setIsCreated(true);
-    }
+    } catch (error) {
+      const err = error.response.data.errors;
 
-    if (data.errors instanceof Object) {
-      if (data.errors.firstName) {
-        setFirstNameError(data.errors.firstName);
+      if (err instanceof Object) {
+        if (err.firstName) {
+          setFirstNameError(err.firstName);
+        }
+        if (err.lastName) {
+          setLastNameError(err.lastName);
+        }
+        if (err.email) {
+          setEmailError(err.email);
+        }
+        if (err.password) {
+          setPasswordError(err.password);
+        }
+      } else if (err && err.includes("email")) {
+        setEmailError(err);
+      } else {
+        setErrorMsg(err);
       }
-      if (data.errors.lastName) {
-        setLastNameError(data.errors.lastName);
-      }
-      if (data.errors.email) {
-        setEmailError(data.errors.email);
-      }
-      if (data.errors.password) {
-        setPasswordError(data.errors.password);
-      }
-    } else if (data.errors && data.errors.includes("email")) {
-      setEmailError(data.errors);
-    } else {
-      setErrorMsg(data.errors);
     }
   };
 

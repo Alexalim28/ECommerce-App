@@ -1,25 +1,11 @@
 import "./home.css";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-
-// Third Party Library
 import axios from "axios";
-
-// Components
 import Item from "../../components/item";
-import Signin from "../../components/signin";
-import Login from "../../components/login";
 
-const Home = ({
-  showSigninModal,
-  setShowSigninModal,
-  showLoginModal,
-  setShowLoginModal,
-  setIsLoggedIn,
-}) => {
+const Home = ({ isLogged, isCreated }) => {
   const [products, setProducts] = useState([]);
-  const [isCreated, setIsCreated] = useState(false);
-  const [isLogged, setIsLogged] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -61,19 +47,6 @@ const Home = ({
 
   return (
     <div className="home-container">
-      {showSigninModal && (
-        <Signin
-          setShowSigninModal={setShowSigninModal}
-          setIsCreated={setIsCreated}
-        />
-      )}
-      {showLoginModal && (
-        <Login
-          setShowLoginModal={setShowLoginModal}
-          setIsLogged={setIsLogged}
-          setIsLoggedIn={setIsLoggedIn}
-        />
-      )}
       <section className="grid">
         {products.map((product) => {
           const {

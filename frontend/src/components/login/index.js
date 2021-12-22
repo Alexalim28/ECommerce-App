@@ -1,6 +1,7 @@
 import "./login.css";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Login = ({ setShowLoginModal, setIsLogged, setIsLoggedIn }) => {
   const [email, setEmail] = useState("");
@@ -12,26 +13,21 @@ const Login = ({ setShowLoginModal, setIsLogged, setIsLoggedIn }) => {
 
     setErrorMsg("");
 
-    const response = await fetch("http://localhost:8080/api/accounts/login", {
-      credentials: "include",
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-    });
+    try {
+      await axios.post(
+        "http://localhost:8080/api/accounts/login",
+        {
+          email,
+          password,
+        },
+        { withCredentials: true }
+      );
 
-    const data = await response.json();
-
-    if (data.message) {
       setIsLogged(true);
       setIsLoggedIn(true);
       setShowLoginModal(false);
-    }
-
-    if (data.errors) {
-      setErrorMsg(data.errors);
+    } catch (error) {
+      setErrorMsg(error.response.data.errors);
     }
   };
 

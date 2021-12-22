@@ -41,6 +41,7 @@ h2 {
   border-radius: 5px;
   outline-style: none;
   font-size: 0.8rem;
+  outline-style: none;
 }
 
 .btn {
@@ -52,4 +53,5 @@ h2 {
   letter-spacing: 2px;
   border-radius: 10px;
   cursor: pointer;
+  outline-style: none;
 }

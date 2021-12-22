@@ -1,6 +1,6 @@
 import "./App.css";
 import { useEffect, useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Home from "./pages/home";
@@ -10,11 +10,18 @@ import Forgot from "./pages/forgot";
 import Reset from "./pages/reset";
 import Navbar from "./components/navbar";
 import Footer from "./components/footer";
+import Signin from "./components/signin";
+import Login from "./components/login";
 
 function App() {
   const [showSigninModal, setShowSigninModal] = useState(false);
+  const [isCreated, setIsCreated] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [isLogged, setIsLogged] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isReloaded, setIsReloaded] = useState(false);
+
+  const location = useLocation();
 
   useEffect(() => {
     const getLoginCookie = () => {
@@ -25,8 +32,26 @@ function App() {
         setIsLoggedIn(true);
       }
     };
+    if (location.state === "reload") {
+      setIsReloaded(true);
+    }
     getLoginCookie();
-  }, []);
+  }, [location]);
+
+  const displaySignin = showSigninModal && (
+    <Signin
+      setShowSigninModal={setShowSigninModal}
+      setIsCreated={setIsCreated}
+    />
+  );
+
+  const displayLogin = showLoginModal && (
+    <Login
+      setShowLoginModal={setShowLoginModal}
+      setIsLogged={setIsLogged}
+      setIsLoggedIn={setIsLoggedIn}
+    />
+  );
 
   return (
     <div className="App">
@@ -37,23 +62,20 @@ function App() {
         isLoggedIn={isLoggedIn}
         setIsLoggedIn={setIsLoggedIn}
       />
+      {displaySignin}
+      {displayLogin}
       <Routes>
         <Route
           path="/"
           exact
-          element={
-            <Home
-              showSigninModal={showSigninModal}
-              setShowSigninModal={setShowSigninModal}
-              showLoginModal={showLoginModal}
-              setShowLoginModal={setShowLoginModal}
-              setIsLoggedIn={setIsLoggedIn}
-            />
-          }
+          element={<Home isCreated={isCreated} isLogged={isLogged} />}
         />
         <Route path="/product/:id" element={<Product />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/forgot" element={<Forgot />} />
+        <Route
+          path="/forgot"
+          element={<Forgot setShowLoginModal={setShowLoginModal} />}
+        />
         <Route path="/reset/:id" element={<Reset />} />
       </Routes>
       <Footer />
