@@ -1,7 +1,10 @@
-import React, { useEffect } from "react";
+import "./cart.css";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const Cart = () => {
+  const [errorMsg, setErrorMsg] = useState("");
+
   useEffect(() => {
     const getCart = async () => {
       try {
@@ -11,15 +14,19 @@ const Cart = () => {
         );
         console.log(data.cart.products);
       } catch (error) {
-        console.log(error.message);
+        setErrorMsg(error.response.data.errors);
       }
     };
     getCart();
   }, []);
 
   return (
-    <div>
-      <h2>This is the cart page</h2>
+    <div className="cart-container">
+      {errorMsg ? (
+        <h2 className="errorMessage">{errorMsg}</h2>
+      ) : (
+        <h2>This is the cart page</h2>
+      )}
     </div>
   );
 };

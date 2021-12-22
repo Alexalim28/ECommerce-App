@@ -2,6 +2,7 @@ import "./navbar.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { CgShoppingCart } from "react-icons/cg";
+import { GrHomeRounded } from "react-icons/gr";
 
 const Navbar = ({
   setShowSigninModal,
@@ -33,7 +34,15 @@ const Navbar = ({
   return (
     <div>
       <ul className="navbar">
-        <li className="logo">E-Commerce App</li>
+        <li className="logo">
+          <Link to="/">E-Commerce App</Link>
+        </li>
+        <li className="home">
+          <Link to="/">
+            <GrHomeRounded />
+          </Link>
+        </li>
+
         <li className="greeting">Welcome {getNameCookie()} !</li>
         <li className="cart">
           <Link to="/cart">

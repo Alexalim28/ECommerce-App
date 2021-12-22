@@ -12,6 +12,10 @@
   background-color: rgb(253, 245, 245);
 }
 
+li {
+  list-style: none;
+}
+
 .logo {
   width: 30%;
   margin-right: auto;
@@ -22,12 +26,16 @@
   color: rgba(0, 0, 0, 0.7);
 }
 
+.home a {
+  font-size: 2rem;
+  color: rgba(0, 0, 0, 0.8);
+}
+
 .signin,
 .login {
   width: 10%;
   text-align: center;
   margin-left: 10px;
-  list-style: none;
   cursor: pointer;
   border: 1px solid rgb(32, 1, 32);
   border-radius: 50px;
@@ -53,7 +61,6 @@
 .cart {
   position: relative;
   margin-right: 60px;
-  list-style: none;
 }
 
 .cart a {
@@ -86,6 +93,5 @@
   font-family: "Roboto Condensed", sans-serif;
   padding-left: 80px;
   font-size: 1.8rem;
-  list-style: none;
   color: cornflowerblue;
 }
