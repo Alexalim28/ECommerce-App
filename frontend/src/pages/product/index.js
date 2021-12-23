@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import "./product.css";
 
-const Product = () => {
+const Product = ({ setShowLoginModal, setCart }) => {
   const [name, setName] = useState("");
   const [imgUrl, setImgUrl] = useState("");
   const [description, setDescription] = useState("");
@@ -34,7 +34,7 @@ const Product = () => {
     e.preventDefault();
     try {
       const { data } = await axios.patch(
-        "http://localhost:8080/api/carts/addProduct",
+        `http://localhost:8080/api/carts/addProduct/${id}`,
         {
           name,
           imgUrl,
@@ -44,9 +44,10 @@ const Product = () => {
         },
         { withCredentials: true }
       );
-      console.log(data);
+      setCart(data.cart.products);
+      window.location.reload();
     } catch (error) {
-      console.log(error.message);
+      setShowLoginModal(true);
     }
   };
 

@@ -9,7 +9,7 @@ const {
 
 router.route("/getCart").get(getCartController);
 
-router.route("/addProduct").patch(addProductController);
+router.route("/addProduct/:productId").patch(addProductController);
 
 router.route("/deleteProduct/:id").patch(deleteProductController);
 

@@ -1,3 +1,4 @@
+const { Product } = require("../models/Product");
 const Cart = require("../models/Cart");
 
 const getCartController = async (req, res) => {
@@ -6,10 +7,15 @@ const getCartController = async (req, res) => {
 };
 
 const addProductController = async (req, res) => {
+  const { productId } = req.params;
+
   const cart = await Cart.findOne({ createdBy: req.userId });
   cart.products.push(req.body);
   await cart.save();
-  res.status(200).json({ message: "Product added in the cart" });
+
+  await Product.findByIdAndUpdate(productId, { $inc: { qtyInStock: -1 } });
+
+  res.status(200).json({ cart, message: "Product added in the cart" });
 };
 
 const deleteProductController = async (req, res) => {

@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import Item from "../../components/item";
 
-const Home = ({ isLogged, isCreated }) => {
+const Home = ({ isCreated }) => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -31,19 +31,19 @@ const Home = ({ isLogged, isCreated }) => {
         style: { background: "lightgreen", color: "#FFF" },
       });
     }
-    if (isLogged) {
-      toast.success("Your are succesfully logged in", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: false,
-        progress: undefined,
-        style: { background: "lightgreen", color: "#FFF" },
-      });
-    }
-  }, [isCreated, isLogged]);
+    // if (isLogged) {
+    //   toast.success("Your are succesfully logged in", {
+    //     position: "top-right",
+    //     autoClose: 3000,
+    //     hideProgressBar: false,
+    //     closeOnClick: true,
+    //     pauseOnHover: true,
+    //     draggable: false,
+    //     progress: undefined,
+    //     style: { background: "lightgreen", color: "#FFF" },
+    //   });
+    // }
+  }, [isCreated]);
 
   return (
     <div className="home-container">

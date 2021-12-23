@@ -1,33 +1,35 @@
 import "./cart.css";
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React from "react";
+import AddedProduct from "../../components/addedProduct";
 
-const Cart = () => {
-  const [errorMsg, setErrorMsg] = useState("");
-
-  useEffect(() => {
-    const getCart = async () => {
-      try {
-        const { data } = await axios.get(
-          "http://localhost:8080/api/carts/getCart",
-          { withCredentials: true }
-        );
-        console.log(data.cart.products);
-      } catch (error) {
-        setErrorMsg(error.response.data.errors);
-      }
-    };
-    getCart();
-  }, []);
-
+const Cart = ({ cart }) => {
   return (
-    <div className="cart-container">
-      {errorMsg ? (
-        <h2 className="errorMessage">{errorMsg}</h2>
-      ) : (
-        <h2>This is the cart page</h2>
-      )}
-    </div>
+    <>
+      <h1 className="title">Your cart</h1>
+      <div className="cart-container">
+        <div className="list">
+          {cart.length === 0 ? (
+            <h2 className="errorMessage">
+              You must be logged in or create an account
+            </h2>
+          ) : (
+            cart.map((product) => (
+              <AddedProduct key={product._id} details={product} />
+            ))
+          )}
+        </div>
+        <div className="total">
+          <div className="quantity">
+            <span className="subtitle">Quantity:</span>
+            <span>{cart.length}</span>
+          </div>
+          <div className="price">
+            <span className="subtitle">Price:</span>
+            <span>0 $</span>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 

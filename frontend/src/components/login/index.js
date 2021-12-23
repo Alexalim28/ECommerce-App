@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
-const Login = ({ setShowLoginModal, setIsLogged, setIsLoggedIn }) => {
+const Login = ({ setShowLoginModal, setShowSigninModal, setIsLoggedIn }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
@@ -23,12 +23,17 @@ const Login = ({ setShowLoginModal, setIsLogged, setIsLoggedIn }) => {
         { withCredentials: true }
       );
 
-      setIsLogged(true);
       setIsLoggedIn(true);
       setShowLoginModal(false);
+      window.location.reload();
     } catch (error) {
       setErrorMsg(error.response.data.errors);
     }
+  };
+
+  const createAccount = () => {
+    setShowLoginModal(false);
+    setShowSigninModal(true);
   };
 
   return (
@@ -60,6 +65,9 @@ const Login = ({ setShowLoginModal, setIsLogged, setIsLoggedIn }) => {
             />
           </div>
           {errorMsg && <p className="error">{errorMsg}</p>}
+          <div onClick={createAccount}>
+            <span style={{ cursor: "pointer" }}> Create an account?</span>
+          </div>
           <div>
             <Link to="/forgot">
               Forgot your password?

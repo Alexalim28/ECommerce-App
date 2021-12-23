@@ -9,6 +9,8 @@ const Navbar = ({
   setShowLoginModal,
   isLoggedIn,
   setIsLoggedIn,
+  productQty,
+  setCart,
 }) => {
   const logOut = async () => {
     const { data } = await axios.get(
@@ -17,6 +19,7 @@ const Navbar = ({
     );
     if (data.message) {
       setIsLoggedIn(false);
+      setCart([]);
     }
   };
 
@@ -49,7 +52,7 @@ const Navbar = ({
             <CgShoppingCart />
           </Link>
           <div className="items">
-            <span>0</span>
+            <span>{productQty}</span>
           </div>
         </li>
         <li className="signin" onClick={() => setShowSigninModal(true)}>

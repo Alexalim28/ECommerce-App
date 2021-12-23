@@ -1,0 +1,38 @@
+.added-container {
+  display: flex;
+  width: 100%;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  border-left: 10px solid palevioletred;
+  border-radius: 2px;
+  box-shadow: 2px 1px 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.added-container > img {
+  width: 250px;
+  height: 150px;
+  object-fit: cover;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  align-self: center;
+  justify-content: space-between;
+  height: 50px;
+  padding-left: 30px;
+}
+
+.details h2 {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.trash {
+  color: darkred;
+  align-self: center;
+  padding-right: 20px;
+  font-size: 1.4rem;
+  cursor: pointer;
+}
