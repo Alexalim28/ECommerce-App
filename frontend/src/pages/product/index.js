@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import BeatLoader from "react-spinners/BeatLoader";
+import { css } from "@emotion/react";
 import "./product.css";
+
+const override = css`
+  display: block;
+  margin: auto;
+`;
 
 const Product = ({ setShowLoginModal, setCart }) => {
   const [name, setName] = useState("");
@@ -9,6 +16,7 @@ const Product = ({ setShowLoginModal, setCart }) => {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
   const [qtyInStock, setQtyInStock] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const { id } = useParams();
 
@@ -25,6 +33,7 @@ const Product = ({ setShowLoginModal, setCart }) => {
       setDescription(description);
       setPrice(price);
       setQtyInStock(qtyInStock);
+      setLoading(false);
     };
 
     fetchProduct();
@@ -61,13 +70,40 @@ const Product = ({ setShowLoginModal, setCart }) => {
       <div className="card">
         <div className="quantity">
           <span className="subtitle">Quantity:</span>
-          <span>{qtyInStock}</span>
+          <span>
+            {loading ? (
+              <BeatLoader
+                color="#7B2CC2"
+                loading={loading}
+                css={override}
+                size={40}
+              />
+            ) : (
+              qtyInStock
+            )}
+          </span>
         </div>
         <div className="price">
           <span className="subtitle">Price:</span>
-          <span>{price} $</span>
+          <span>
+            {loading ? (
+              <BeatLoader
+                color="#7B2CC2"
+                loading={loading}
+                css={override}
+                size={40}
+              />
+            ) : (
+              price
+            )}
+            $
+          </span>
         </div>
-        <button className="add-btn" onClick={addProduct}>
+        <button
+          className="add-btn"
+          disabled={!qtyInStock && "true"}
+          onClick={addProduct}
+        >
           add to my cart
         </button>
       </div>

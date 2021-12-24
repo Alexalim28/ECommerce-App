@@ -79,3 +79,8 @@ span {
   cursor: pointer;
   outline-style: none;
 }
+
+.add-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

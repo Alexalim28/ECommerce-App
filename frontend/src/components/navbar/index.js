@@ -11,6 +11,7 @@ const Navbar = ({
   setIsLoggedIn,
   productQty,
   setCart,
+  setTotal,
 }) => {
   const logOut = async () => {
     const { data } = await axios.get(
@@ -20,6 +21,7 @@ const Navbar = ({
     if (data.message) {
       setIsLoggedIn(false);
       setCart([]);
+      setTotal(0);
     }
   };
 

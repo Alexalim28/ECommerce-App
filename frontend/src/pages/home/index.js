@@ -1,11 +1,20 @@
 import "./home.css";
 import { useState, useEffect } from "react";
-import { toast } from "react-toastify";
 import axios from "axios";
+import { toast } from "react-toastify";
+import HashLoader from "react-spinners/HashLoader";
+import { css } from "@emotion/react";
 import Item from "../../components/item";
+
+const override = css`
+  display: block;
+  min-height: calc(100vh - 80px);
+  margin: auto;
+`;
 
 const Home = ({ isCreated }) => {
   const [products, setProducts] = useState([]);
+  let [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -13,6 +22,7 @@ const Home = ({ isCreated }) => {
         "http://localhost:8080/api/products/getAllProducts"
       );
       setProducts(data.products);
+      setLoading(false);
     };
 
     fetchProducts();
@@ -31,22 +41,11 @@ const Home = ({ isCreated }) => {
         style: { background: "lightgreen", color: "#FFF" },
       });
     }
-    // if (isLogged) {
-    //   toast.success("Your are succesfully logged in", {
-    //     position: "top-right",
-    //     autoClose: 3000,
-    //     hideProgressBar: false,
-    //     closeOnClick: true,
-    //     pauseOnHover: true,
-    //     draggable: false,
-    //     progress: undefined,
-    //     style: { background: "lightgreen", color: "#FFF" },
-    //   });
-    // }
   }, [isCreated]);
 
   return (
     <div className="home-container">
+      <HashLoader color="#7B2CC2" loading={loading} css={override} size={100} />
       <section className="grid">
         {products.map((product) => {
           const {

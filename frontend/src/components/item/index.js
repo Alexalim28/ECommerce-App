@@ -4,7 +4,7 @@ import "./item.css";
 import { VscCheck } from "react-icons/vsc";
 import { ImCross } from "react-icons/im";
 
-const Item = ({ id, name, imgUrl, description, price, qtyInStock }) => {
+const Item = ({ id, name, imgUrl, price, qtyInStock }) => {
   return (
     <div className="item">
       <img className="img" src={imgUrl} alt="product" />

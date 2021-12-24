@@ -2,7 +2,7 @@ import "./cart.css";
 import React from "react";
 import AddedProduct from "../../components/addedProduct";
 
-const Cart = ({ cart }) => {
+const Cart = ({ cart, total, deleteProduct }) => {
   return (
     <>
       <h1 className="title">Your cart</h1>
@@ -14,7 +14,11 @@ const Cart = ({ cart }) => {
             </h2>
           ) : (
             cart.map((product) => (
-              <AddedProduct key={product._id} details={product} />
+              <AddedProduct
+                key={product._id}
+                details={product}
+                deleteProduct={deleteProduct}
+              />
             ))
           )}
         </div>
@@ -24,8 +28,8 @@ const Cart = ({ cart }) => {
             <span>{cart.length}</span>
           </div>
           <div className="price">
-            <span className="subtitle">Price:</span>
-            <span>0 $</span>
+            <span className="subtitle">Total:</span>
+            <span>{total} $</span>
           </div>
         </div>
       </div>

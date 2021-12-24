@@ -8,25 +8,45 @@ const getCartController = async (req, res) => {
 
 const addProductController = async (req, res) => {
   const { productId } = req.params;
+  const product = await Product.findByIdAndUpdate(productId, {
+    $inc: { qtyInStock: -1 },
+  });
 
   const cart = await Cart.findOne({ createdBy: req.userId });
   cart.products.push(req.body);
+  cart.total += product.price;
   await cart.save();
-
-  await Product.findByIdAndUpdate(productId, { $inc: { qtyInStock: -1 } });
 
   res.status(200).json({ cart, message: "Product added in the cart" });
 };
 
 const deleteProductController = async (req, res) => {
-  const { id } = req.params;
-  const { userId } = req;
+  const {
+    body: { productId },
+    userId,
+  } = req;
 
-  const cart = await Cart.findOneAndUpdate(
-    { createdBy: userId },
-    { $pull: { products: { _id: id } } },
-    { new: true }
+  const cart = await Cart.findOne({ createdBy: userId });
+
+  const product = cart.products.find(
+    (product) => product._id.toString() === productId
   );
+
+  const price = product.price;
+  cart.total -= price;
+
+  cart.products = cart.products.filter(
+    (product) => product._id.toString() !== productId
+  );
+
+  await cart.save();
+
+  // const cart = await Cart.findOneAndUpdate(
+  //   { createdBy: userId },
+  //   { $pull: { products: { _id: id } } },
+  //   { new: true }
+  // );
+
   res.status(200).json({ cart });
 };
 

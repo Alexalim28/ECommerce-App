@@ -10,8 +10,8 @@
 
 .cart-container {
   display: flex;
-  width: 80%;
-  min-height: calc(100vh - 80px);
+  /* width: 80%; */
+  /* min-height: calc(100vh - 80px); */
   padding-left: 150px;
   margin: auto;
 }

@@ -2,19 +2,17 @@ import "./addedProduct.css";
 import React from "react";
 import { BsTrash } from "react-icons/bs";
 
-const AddedProduct = ({ details }) => {
-  const { name, imgUrl, price } = details;
-
-  const deleteProduct = async () => {};
+const AddedProduct = ({ details, deleteProduct }) => {
+  const { name, imgUrl, price, _id } = details;
 
   return (
     <div className="added-container">
       <img src={imgUrl} alt="added-product" />
       <div className="details">
         <h3>{name}</h3>
-        <p>{price} $</p>
+        <p className="price">{price} $</p>
       </div>
-      <div className="trash" onClick={deleteProduct}>
+      <div className="trash" onClick={() => deleteProduct(_id)}>
         <BsTrash />
       </div>
     </div>

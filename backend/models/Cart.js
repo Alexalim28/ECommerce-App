@@ -7,6 +7,7 @@ const cartSchema = new mongoose.Schema({
     ref: "User",
   },
   products: [productSchema],
+  total: { type: Number, default: 0 },
 });
 
 module.exports = mongoose.model("cart", cartSchema);

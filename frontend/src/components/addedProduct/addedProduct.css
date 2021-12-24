@@ -25,6 +25,12 @@
   padding-left: 30px;
 }
 
+.price {
+  color: purple;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
 .details h2 {
   color: rgba(0, 0, 0, 0.7);
 }

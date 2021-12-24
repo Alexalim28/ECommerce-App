@@ -16,6 +16,7 @@ import Login from "./components/login";
 
 function App() {
   const [cart, setCart] = useState([]);
+  const [total, setTotal] = useState(0);
   const [showSigninModal, setShowSigninModal] = useState(false);
   const [isCreated, setIsCreated] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -47,12 +48,28 @@ function App() {
           { withCredentials: true }
         );
         setCart(data.cart.products);
+        setTotal(data.cart.total);
       } catch (error) {
         setCart([]);
       }
     };
     fetchCart();
   }, []);
+
+  const deleteProduct = async (productId) => {
+    try {
+      const { data } = await axios.patch(
+        "http://localhost:8080/api/carts/deleteProduct",
+        { productId },
+        { withCredentials: true }
+      );
+
+      setCart(data.cart.products);
+      setTotal(data.cart.total);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const displaySignin = showSigninModal && (
     <Signin
@@ -78,6 +95,7 @@ function App() {
         isLoggedIn={isLoggedIn}
         setIsLoggedIn={setIsLoggedIn}
         setCart={setCart}
+        setTotal={setTotal}
         productQty={cart.length}
       />
       {displaySignin}
@@ -90,7 +108,12 @@ function App() {
             <Product setShowLoginModal={setShowLoginModal} setCart={setCart} />
           }
         />
-        <Route path="/cart" element={<Cart cart={cart} />} />
+        <Route
+          path="/cart"
+          element={
+            <Cart cart={cart} total={total} deleteProduct={deleteProduct} />
+          }
+        />
         <Route
           path="/forgot"
           element={<Forgot setShowLoginModal={setShowLoginModal} />}
